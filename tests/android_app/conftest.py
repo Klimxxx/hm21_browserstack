@@ -5,12 +5,16 @@ import os
 from dotenv import load_dotenv
 
 
-
+@pytest.fixture(scope='session', autouse=True)
+def load_end():
+    load_dotenv()
 
 
 @pytest.fixture(scope='function', autouse=True)
-def mobile_management():
-    load_dotenv()
+def mobile_management(request):
+    user_name = os.getenv('USER_NAME')
+    access_key = os.getenv('ACCESS_KEY')
+
     options = UiAutomator2Options().load_capabilities({
         # Specify device and os_version for testing
         "platformName": "android",
@@ -27,8 +31,8 @@ def mobile_management():
             "sessionName": "BStack first_test",
 
             # Set your access credentials
-            "userName": os.getenv('BS_USERNAME'),
-            "accessKey": os.getenv('BS_PASSWORD')
+            "userName": user_name,
+            "accessKey": access_key
         }
     })
 
@@ -41,6 +45,7 @@ def mobile_management():
     # селен верхние две строчки сам преобразуем в верхнюю одну
 
     browser.config.timeout = float(os.getenv('timeout', '10.0'))
+
     yield
 
     browser.quit()

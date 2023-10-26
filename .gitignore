@@ -30,3 +30,5 @@ __pycache__/
 # Environments
 .venv*
 venv*/
+/tests/android_app/allure-results/
+/tests/web/allure-results/
