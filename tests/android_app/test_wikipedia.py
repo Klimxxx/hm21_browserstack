@@ -7,7 +7,7 @@ from tests.android_app import conftest
 
 
 def test_search():
-    with allure.step('Type search'):
+    with allure.step('Type search Appium'):
         browser.element((AppiumBy.ACCESSIBILITY_ID, "Search Wikipedia")).click()
         browser.element((AppiumBy.ID, "org.wikipedia.alpha:id/search_src_text")).type('Appium')
 
@@ -19,9 +19,9 @@ def test_search():
 
 
 def test_open_article_page():
-    with allure.step('Type search'):
+    with allure.step('Type search Selenium'):
         browser.element((AppiumBy.ACCESSIBILITY_ID, "Search Wikipedia")).click()
-        browser.element((AppiumBy.ID, "org.wikipedia.alpha:id/search_src_text")).type('Appium')
+        browser.element((AppiumBy.ID, "org.wikipedia.alpha:id/search_src_text")).type('Selenium')
 
     with allure.step('Open article page'):
         browser.all((AppiumBy.ID, 'org.wikipedia.alpha:id/page_list_item_title')).first.click()

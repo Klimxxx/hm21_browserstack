@@ -10,7 +10,7 @@ def load_end():
     load_dotenv()
 
 
-@pytest.fixture(scope='function', autouse=True)
+@pytest.fixture(scope='function')
 def mobile_management(request):
     user_name = os.getenv('USER_NAME')
     access_key = os.getenv('ACCESS_KEY')
@@ -36,8 +36,6 @@ def mobile_management(request):
         }
     })
 
-    # Initialize the remote Webdriver using BrowserStack remote URL
-    # and options defined above
     # browser.config.driver = webdriver.Remote("http://hub.browserstack.com/wd/hub", options=options)
     # либо этот сверху либо две строчки снизу вариант передачи драйвера
     browser.config.driver_remote_url = "http://hub.browserstack.com/wd/hub"
@@ -49,3 +47,8 @@ def mobile_management(request):
     yield
 
     browser.quit()
+
+@pytest.fixture(scope='function', autouse=True)
+def setup_and_teardown_browser(request, mobile_management):
+
+    yield
