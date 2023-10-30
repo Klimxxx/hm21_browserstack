@@ -1,9 +1,11 @@
+import allure
 import pytest
+import allure_commons._allure
 from appium.options.android import UiAutomator2Options
-from selene import browser
+from selene import browser, support
 import os
 from dotenv import load_dotenv
-
+from selene_in_action import utils
 
 @pytest.fixture(scope='session', autouse=True)
 def load_end():
@@ -44,11 +46,31 @@ def mobile_management(request):
 
     browser.config.timeout = float(os.getenv('timeout', '10.0'))
 
+    browser.config._wait_decorator = support._logging.wait_with(context=allure_commons._allure.StepContext)
+
     yield
 
-    browser.quit()
+    allure.attach(
+        browser.driver.get_screenshot_as_png(),
+        name='screenshot',
+        attachment_type=allure.attachment_type.PNG,
+    )
+
+    allure.attach(
+        browser.driver.page_source,
+        name='screen xml dump',
+        attachment_type=allure.attachment_type.XML,
+    )
+
+    session_id = browser.driver.session_id
+    with allure.step('tear down app session'):
+        browser.quit()
+
+    utils.allure.attach_bstack_video(session_id)
 
 @pytest.fixture(scope='function', autouse=True)
 def setup_and_teardown_browser(request, mobile_management):
 
     yield
+
+
