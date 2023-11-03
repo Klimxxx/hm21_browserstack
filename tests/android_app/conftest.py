@@ -6,6 +6,7 @@ from selene import browser, support
 import os
 from dotenv import load_dotenv
 from selene_in_action import utils
+from appium import webdriver
 
 @pytest.fixture(scope='session', autouse=True)
 def load_end():
@@ -38,10 +39,10 @@ def mobile_management(request):
         }
     })
 
-    # browser.config.driver = webdriver.Remote("http://hub.browserstack.com/wd/hub", options=options)
+    browser.config.driver = webdriver.Remote("http://hub.browserstack.com/wd/hub", options=options)
     # либо этот сверху либо две строчки снизу вариант передачи драйвера
-    browser.config.driver_remote_url = "http://hub.browserstack.com/wd/hub"
-    browser.config.driver_options = options
+    #browser.config.driver_remote_url = "http://hub.browserstack.com/wd/hub"
+    # browser.config.driver_options = options
     # селен верхние две строчки сам преобразуем в верхнюю одну
 
     browser.config.timeout = float(os.getenv('timeout', '10.0'))
@@ -66,7 +67,7 @@ def mobile_management(request):
     with allure.step('tear down app session'):
         browser.quit()
 
-    utils.allure.attach_bstack_video(session_id)
+    utils.allure.attach_bstack_video(session_id, user_name, access_key)
 
 @pytest.fixture(scope='function', autouse=True)
 def setup_and_teardown_browser(request, mobile_management):
