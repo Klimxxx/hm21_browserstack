@@ -13,8 +13,8 @@ def load_end():
     load_dotenv()
 
 
-@pytest.fixture(scope='function')
-def mobile_management(request):
+@pytest.fixture(scope='function', autouse=True)
+def mobile_management():
     user_name = os.getenv('USER_NAME')
     access_key = os.getenv('ACCESS_KEY')
 
@@ -69,9 +69,6 @@ def mobile_management(request):
 
     utils.allure.attach_bstack_video(session_id, user_name, access_key)
 
-@pytest.fixture(scope='function', autouse=True)
-def setup_and_teardown_browser(request, mobile_management):
 
-    yield
 
 
